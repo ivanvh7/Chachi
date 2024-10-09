@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <style>
+      .product {
+        width: 10%; /* Cuadrados más pequeños */
+        margin: 1%;
+        padding: 10px;
+        background-color: lightgreen;
+        border: 1px solid #ccc;
+        display: inline-block; /* Para que se alineen en una fila */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Productos</h1>
+    <div class="product-container">
+      <div class="product">
+        Producto 1 - 15€ <br />
+        <button class="add-to-cart">Añadir al Carrito</button>
+      </div>
+      <div class="product">
+        Producto 2 - 16€ <br />
+        <button class="add-to-cart">Añadir al Carrito</button>
+      </div>
+      <div class="product">
+        Producto 3 - 20€ <br />
+        <button class="add-to-cart">Añadir al Carrito</button>
+      </div>
+      <div class="product">
+        Producto 4 - 25€ <br />
+        <button class="add-to-cart">Añadir al Carrito</button>
+      </div>
+    </div>
+
+    <button id="download-cart">Descargar Carrito</button>
+
+    <script>
+      let carrito = [];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const cartButtons = document.querySelectorAll(".add-to-cart");
+        const downloadButton = document.getElementById("download-cart");
+
+        const addToCart = (product, price) => {
+          const newItem = { name: product, price: price };
+          carrito.push(newItem);
+          console.log(
+            "Contenido del Carrito en JSON:",
+            JSON.stringify(carrito)
+          );
+        };
+
+        cartButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const productName =
+              button.parentElement.firstChild.textContent.trim();
+            const productPrice = parseFloat(
+              button.parentElement.textContent.match(/[\d\.]+/)[0]
+            );
+            addToCart(productName, productPrice);
+          });
+        });
+
+        downloadButton.addEventListener("click", () => {
+          const blob = new Blob([JSON.stringify(carrito)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'carrito.json';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        });
+      });
+    </script>
+  </body>
+</html>
